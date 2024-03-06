@@ -1,0 +1,26 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Self-elevate the script if required
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+    $CommandLine = "-NoExit -File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
+    Start-Process -Wait -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
+    Exit
+  }
+}
+
+$fontPath = 'C:\Windows\Fonts\SauceCodeProNerdFont-Regular.ttf'
+if(-not (Test-Path $fontPath)) {
+    if(-not (Test-Path c:\temp)) {
+        mkdir c:\temp
+    }
+
+    Invoke-WebRequest `
+        -Uri "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/SauceCodeProNerdFont-Regular.ttf" `
+        -OutFile 'c:\temp\SauceCodeProNerdFont-Regular.ttf'
+
+    $fonts = (New-Object -ComObject Shell.Application).Namespace(0x14)
+    $fonts.CopyHere('c:\temp\SauceCodeProNerdFont-Regular.ttf')
+    
+    Move-Item -Path 'c:\temp\SauceCodeProNerdFont-Regular.ttf' -Destination $fontPath
+}
+{{ end -}}

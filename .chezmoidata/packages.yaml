@@ -1,0 +1,20 @@
+packages:
+  container:
+    linux:
+  work:
+    windows:
+      winget:
+      - 'JanDeDobbeleer.OhMyPosh'
+      - 'Git.Git'
+      - 'GitHub.GitLFS'
+      - 'GitHub.cli'
+      - 'Microsoft.AzureCLI'
+      - 'Microsoft.VisualStudioCode'
+      - '7zip.7zip'
+      - 'Grammarly.Grammarly'
+      - 'Microsoft.VisualStudio.2019.BuildTools'
+  personal:
+    windows:
+      winget:
+      - 'Discord.Discord'
+      - 'Obsidian.Obsidian'

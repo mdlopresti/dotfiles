@@ -1,0 +1,11 @@
+{{- $codespaces:= env "CODESPACES" | not | not -}}
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[data]
+    name = "Your name"
+    codespaces = {{ $codespaces }}
+{{ if eq .chezmoi.hostname "MikesDesktop" -}}
+    email = "mike@lopresti.org"
+{{- else }}
+    email = "michael.lopresti@yum.com"
+{{- end }}

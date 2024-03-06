@@ -1,0 +1,9 @@
+{{ if ne .chezmoi.os "linux" }}
+.chezmoiscripts/linux/**
+{{ end }}
+{{ if ne .chezmoi.os "windows" }}
+.chezmoiscripts/windows/**
+AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+AppData\Roaming\Code\User\*.json
+OneDrive\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+{{ end }}
