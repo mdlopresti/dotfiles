@@ -62,5 +62,21 @@
     "pymakr.misc.notifications": {
         "Uploading a project will delete all existing files on the device before uploading the project folder. After uploading a project, you can start it by restarting the device. For faster uploads without file deletion, please put the device in dev mode.": "Don't show again"
     },
-    "CodeGPT.apiKey": "OpenAI"
+    "CodeGPT.apiKey": "OpenAI",
+    "terminal.integrated.profiles.windows": {
+        "Windows PowerShell": {
+            "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "Windows PowerShell",
+    "git-autoconfig.configList": [
+        {
+            "user.email": "mike@lopresti.org",
+            "user.name": "Mike LoPresti"
+        },
+        {
+            "user.email": "mdl4071@yum.com",
+            "user.name": "Mike LoPresti"
+        }
+    ]
 }

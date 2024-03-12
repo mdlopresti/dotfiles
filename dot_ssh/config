@@ -2,3 +2,7 @@ Host homeassistant.vilo.network
   HostName homeassistant.vilo.network
   User root
   IdentityFile ~/.ssh/id_rsa_desktop
+Host ansible.vilo.network
+  HostName ansible.vilo.network
+  User root
+  IdentityFile ~/.ssh/id_rsa_desktop

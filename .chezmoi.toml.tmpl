@@ -1,6 +1,5 @@
 {{- $codespaces:= env "CODESPACES" | not | not -}}
 sourceDir = {{ .chezmoi.sourceDir | quote }}
-scriptTempDir = "~/tmp"
 
 [data]
     name = "Your name"
@@ -10,3 +9,5 @@ scriptTempDir = "~/tmp"
 {{- else }}
     email = "michael.lopresti@yum.com"
 {{- end }}
+
+scriptTempDir = "~/.chezmoi_tmp"
