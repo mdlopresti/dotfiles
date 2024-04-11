@@ -78,5 +78,8 @@
             "user.email": "mdl4071@yum.com",
             "user.name": "Mike LoPresti"
         }
-    ]
+    ],
+    "remote.SSH.remotePlatform": {
+        "k8s": "linux"
+    }
 }

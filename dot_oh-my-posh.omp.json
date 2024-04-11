@@ -31,16 +31,6 @@
           "background": "#0077c2"
         },
         {
-          "type": "az",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#ffffff",
-          "background": "#000033",
-          "properties": {
-            "display_name": true
-          }
-        },
-        {
           "type": "path",
           "style": "powerline",
           "powerline_symbol": "\ue0b0",
@@ -48,17 +38,6 @@
           "background": "#61AFEF",
           "properties": {
             "style": "mixed"
-          }
-        },
-        {
-          "type": "git",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#193549",
-          "background": "#ffeb3b",
-          "properties": {
-            "fetch_stash_count": true,
-            "fetch_upstream_icon": true
           }
         },
         {
@@ -75,6 +54,38 @@
           }
         }
       ]
+    }
+  ],
+  "tooltips": [
+    {
+      "type": "git",
+      "tips": [
+        "git",
+        "g"
+      ],
+      "style": "diamond",
+      "foreground": "#193549",
+      "background": "#fffb38",
+      "leading_diamond": "",
+      "trailing_diamond": "",
+      "template": "{{ .HEAD }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}",
+      "properties": {
+        "fetch_status": true,
+        "fetch_upstream_icon": true
+      }
+    },
+    {
+      "type": "az",
+      "tips": [
+        "az"
+      ],
+      "style": "powerline",
+      "powerline_symbol": "\ue0b0",
+      "foreground": "#ffffff",
+      "background": "#000033",
+      "properties": {
+        "display_name": true
+      }
     }
   ]
 }
