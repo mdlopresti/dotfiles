@@ -13,6 +13,11 @@ packages:
       - '7zip.7zip'
       - 'Grammarly.Grammarly'
       - 'Microsoft.VisualStudio.2019.BuildTools'
+      - 'Microsoft.VisualStudio.2022.Professional'
+      - 'Kubernetes.kompose'
+      - 'Kubernetes.kubectl'
+      - 'Helm.Helm'
+      - 'Microsoft.Azure.Kubelogin'
   personal:
     windows:
       winget:

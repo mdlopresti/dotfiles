@@ -1,8 +1,32 @@
-Host homeassistant.vilo.network
+Host homeassistant
   HostName homeassistant.vilo.network
   User root
   IdentityFile ~/.ssh/id_rsa_desktop
-Host ansible.vilo.network
+Host ansible
   HostName ansible.vilo.network
   User root
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host pve
+  HostName pve.vilo.network
+  User root
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host docker-host
+  HostName docker-host.vilo.network
+  User mike
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host nextcloud
+  HostName 192.168.3.14
+  User semaphore
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host audiobookshelf
+  HostName audiobookshelf-host.vilo.network
+  User semaphore
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host wiki
+  HostName bookstack.vilo.network
+  User semaphore
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host k8s
+  HostName k8s-controller.vilo.network
+  User semaphore
   IdentityFile ~/.ssh/id_rsa_desktop
