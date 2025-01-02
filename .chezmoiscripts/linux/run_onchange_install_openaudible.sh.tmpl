@@ -1,0 +1,9 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "LMDE" }}
+apt install libwebkit2gtk-4.1-0 libwebkit2gtk-4.1-dev -y
+curl -OL https://openaudible.org/latest/OpenAudible_x86_64.deb
+sudo dpkg -i OpenAudible_x86_64.deb
+sudo apt-get install -f -y
+rm OpenAudible_x86_64.deb
+{{ end }}

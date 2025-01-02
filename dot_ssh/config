@@ -30,3 +30,16 @@ Host k8s
   HostName k8s-controller.vilo.network
   User semaphore
   IdentityFile ~/.ssh/id_rsa_desktop
+Host gitlab.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_ed25519_gitlab
+Host ssh.dev.azure.com vs-ssh.visualstudio.com
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_rsa_ado
+Host files
+  HostName files.vilo.network
+  User semaphore
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host gitea gitea.vilo.network
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_rsa

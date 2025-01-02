@@ -1,0 +1,12 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "LMDE" }}
+curl -s https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/isv-rancher-stable-archive-keyring.gpg
+echo 'deb [signed-by=/usr/share/keyrings/isv-rancher-stable-archive-keyring.gpg] https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/ ./' | sudo dd status=none of=/etc/apt/sources.list.d/isv-rancher-stable.list
+apt update -y
+apt install rancher-desktop -y
+
+curl -L "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -o /tmp/vscode.deb
+apt install /tmp/vscode.deb -y
+rm /tmp/vscode.deb
+{{ end }}

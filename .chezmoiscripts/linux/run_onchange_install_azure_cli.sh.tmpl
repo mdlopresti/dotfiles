@@ -1,0 +1,18 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "LMDE" }}
+# based on https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt
+curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/microsoft.gpg > /dev/null
+sudo chmod go+r /etc/apt/keyrings/microsoft.gpg
+
+AZ_DIST=$(lsb_release -cs)
+echo "Types: deb
+URIs: https://packages.microsoft.com/repos/azure-cli/
+Suites: ${AZ_DIST}
+Components: main
+Architectures: $(dpkg --print-architecture)
+Signed-by: /etc/apt/keyrings/microsoft.gpg" | tee /etc/apt/sources.list.d/azure-cli.sources
+
+apt update -y
+apt install azure-cli -y
+{{ end }}

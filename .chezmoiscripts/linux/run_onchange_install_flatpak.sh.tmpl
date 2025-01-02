@@ -1,0 +1,14 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "LMDE" }}
+flatpak install flathub md.obsidian.Obsidian --assumeyes
+flatpak install flathub com.discordapp.Discord --assumeyes
+flatpak install flathub com.discordapp.Discord --assumeyes
+flatpak install flathub com.protonvpn.www --assumeyes
+flatpak install flathub org.signal.Signal --assumeyes
+flatpak override --env=SIGNAL_PASSWORD_STORE=gnome-libsecret org.signal.Signal
+flatpak install flathub org.inkscape.Inkscape --assumeyes
+flatpak install flathub me.proton.Mail --assumeyes
+flatpak install flathub me.proton.Pass --assumeyes
+flatpak install flathub im.fluffychat.Fluffychat --assumeyes
+{{ end }}
