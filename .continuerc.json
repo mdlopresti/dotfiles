@@ -1,0 +1,27 @@
+{
+    "$schema": "https://raw.githubusercontent.com/continuedev/continue/refs/heads/main/extensions/vscode/config_schema.json",
+    "models": [
+    {
+      "model": "qwen2.5-coder:7b",
+      "title": "qwen2.5-coder:7b",
+      "provider": "ollama"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "model": "qwen2.5-coder:7b",
+    "title": "qwen2.5-coder:7b",
+    "provider": "ollama"
+  },
+    "docs": [
+        {
+            "title": "Chezmoi Configuration",
+            "rootUrl": "https://www.chezmoi.io/",
+            "startUrl": "https://www.chezmoi.io/"
+        },
+        {
+            "title": "Webcam Setup",
+            "rootUrl": "https://www.crackedthecode.co/how-to-use-your-dslr-as-a-webcam-in-linux/#software-needed",
+            "startUrl": "https://www.crackedthecode.co/how-to-use-your-dslr-as-a-webcam-in-linux/#software-needed"
+        }
+    ]
+}
