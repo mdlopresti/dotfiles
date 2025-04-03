@@ -1,0 +1,10 @@
+#!/bin/bash
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+touch ~/.bashrc
+POSH_LINE='eval "$(~/oh-my-posh --init --shell bash --config ~/.oh-my-posh.omp.json)"'
+if grep -q -F "$POSH_LINE" "/var/home/mike/.bashrc"; then
+  echo "Line exists in file."
+else
+  echo $POSH_LINE >> "/var/home/mike/.bashrc"
+fi
+{{ end }}

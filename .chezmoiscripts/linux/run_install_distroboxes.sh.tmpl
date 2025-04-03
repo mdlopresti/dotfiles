@@ -1,0 +1,4 @@
+#!/bin/bash
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+DBX_CONTAINER_ALWAYS_PULL=0 distrobox assemble create --file {{ .chezmoi.sourceDir }}/distrobox.ini
+{{ end }}

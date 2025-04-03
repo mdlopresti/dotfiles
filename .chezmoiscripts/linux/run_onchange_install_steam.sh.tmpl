@@ -5,3 +5,6 @@ add-apt-repository multiverse
 apt update
 apt install steam -y
 {{ end }}
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+flatpak install flathub com.valvesoftware.Steam --assumeyes
+{{ end }}
