@@ -1,0 +1,7 @@
+{
+    "window.titleBarStyle": "custom",
+    "editor.fontFamily": "'SauceCodePro Nerd Font', 'Droid Sans Mono', 'monospace', monospace",
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false
+}

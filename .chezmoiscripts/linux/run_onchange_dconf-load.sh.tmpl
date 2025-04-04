@@ -2,3 +2,4 @@
 # dconf.ini hash: {{ include "dconf.ini" | sha256sum }}
 {{ if eq .chezmoi.osRelease.name "Bluefin" }}
 dconf load / < {{ joinPath .chezmoi.sourceDir "dconf.ini" | quote }}
+{{ end }}

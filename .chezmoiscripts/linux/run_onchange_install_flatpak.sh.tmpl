@@ -1,6 +1,6 @@
 #!/bin/bash
 
-{{ if eq .chezmoi.osRelease.name "LMDE" }}
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
 flatpak install flathub md.obsidian.Obsidian --assumeyes
 flatpak install flathub com.discordapp.Discord --assumeyes
 flatpak install flathub com.discordapp.Discord --assumeyes
@@ -11,4 +11,7 @@ flatpak install flathub org.inkscape.Inkscape --assumeyes
 flatpak install flathub me.proton.Mail --assumeyes
 flatpak install flathub me.proton.Pass --assumeyes
 flatpak install flathub im.fluffychat.Fluffychat --assumeyes
+flatpak install flathub com.microsoft.Edge --assumeyes
+flatpak install flathub com.github.IsmaelMartinez.teams_for_linux --assumeyes
+flatpak install flathub org.libreoffice.LibreOffice --assumeyes
 {{ end }}

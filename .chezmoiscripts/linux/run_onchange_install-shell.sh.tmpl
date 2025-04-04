@@ -4,13 +4,8 @@
 wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O ~/oh-my-posh
 chmod +x ~/oh-my-posh
 echo 'eval "$(~/oh-my-posh --init --shell bash --config ~/.oh-my-posh.omp.json)"' >> ~/.bashrc
-{{ end }}
 
-{{ if eq .chezmoi.osRelease.name "LMDE" }}
-mkdir -p /usr/share/fonts/truetype/
-sudo curl -L "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/SauceCodeProNerdFont-Regular.ttf" -o /usr/share/fonts/truetype/SauceCodeProNerdFont-Regular.ttf
+mkdir -p ~/.local/share/fonts/truetype/
+sudo curl -L "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/SauceCodeProNerdFont-Regular.ttf" -o ~/.local/share/fonts/truetype/SauceCodeProNerdFont-Regular.ttf
 fc-cache -fv
-
-# gterminal.preferences hash: {{ include "gterminal.preferences" | sha256sum }}
-dconf load /org/gnome/terminal/legacy/ < {{ joinPath .chezmoi.sourceDir "gterminal.preferences" | quote }}
 {{ end }}

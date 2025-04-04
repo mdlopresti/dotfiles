@@ -9,7 +9,7 @@
     process = git-lfs filter-process
     required = true
 [core]
-    autocrlf = true
+    autocrlf = false
 [credential]
     helper = wincred
 [init]
