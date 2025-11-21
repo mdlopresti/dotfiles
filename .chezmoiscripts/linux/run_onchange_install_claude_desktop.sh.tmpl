@@ -1,0 +1,36 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+# Install Claude Desktop for Linux
+# Based on https://github.com/aaddrick/claude-desktop-debian
+
+# Create installation directory
+mkdir -p ~/.local/bin
+mkdir -p ~/.local/share/applications
+
+# Download latest AppImage
+LATEST_RELEASE=$(curl -s https://api.github.com/repos/aaddrick/claude-desktop-debian/releases/latest | grep -oP '"browser_download_url":\s*"\K[^"]*AppImage[^"]*' | head -1)
+
+if [ -n "$LATEST_RELEASE" ]; then
+    echo "Downloading Claude Desktop AppImage from: $LATEST_RELEASE"
+    curl -L -o ~/.local/bin/claude-desktop.AppImage "$LATEST_RELEASE"
+    chmod +x ~/.local/bin/claude-desktop.AppImage
+
+    # Create desktop entry for application menu
+    cat > ~/.local/share/applications/claude-desktop.desktop <<EOF
+[Desktop Entry]
+Name=Claude Desktop
+Exec=$HOME/.local/bin/claude-desktop.AppImage
+Icon=claude
+Type=Application
+Categories=Network;Chat;
+Comment=Claude AI Desktop Application
+Terminal=false
+EOF
+
+    echo "Claude Desktop installed successfully"
+else
+    echo "Failed to find Claude Desktop AppImage release"
+    exit 1
+fi
+{{ end }}

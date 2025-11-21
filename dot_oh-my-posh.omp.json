@@ -1,91 +1,100 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-  "version": 2,
-  "final_space": true,
   "blocks": [
     {
       "type": "prompt",
       "alignment": "left",
       "segments": [
         {
-          "type": "os",
-          "style": "plain",
+          "properties": {
+            "cache_duration": "none",
+            "macos": "mac"
+          },
           "foreground": "#26C6DA",
           "background": "#000000",
-          "properties": {
-            "macos": "mac"
-          }
+          "type": "os",
+          "style": "plain"
         },
         {
-          "type": "session",
-          "style": "powerline",
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "\ue0b6",
           "foreground": "#000000",
           "background": "#00FF00",
-          "leading_diamond": "\ue0b6"
+          "type": "session",
+          "style": "powerline"
         },
         {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "foreground": "#ffffff",
+          "powerline_symbol": "\ue0b0",
+          "background": "#0077c2",
           "type": "shell",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#ffffff",
-          "background": "#0077c2"
+          "style": "powerline"
         },
         {
-          "type": "path",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#ffffff",
-          "background": "#61AFEF",
           "properties": {
+            "cache_duration": "none",
             "style": "mixed"
-          }
+          },
+          "foreground": "#ffffff",
+          "powerline_symbol": "\ue0b0",
+          "background": "#61AFEF",
+          "type": "path",
+          "style": "powerline"
         },
         {
-          "type": "spotify",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b0",
-          "foreground": "#ffffff",
-          "background": "#1BD760",
           "properties": {
+            "cache_duration": "none",
             "paused_icon": "\uf8e3 ",
             "playing_icon": "\ue602 ",
             "stopped_icon": "\uf04d ",
             "track_separator": ":"
-          }
+          },
+          "foreground": "#ffffff",
+          "powerline_symbol": "\ue0b0",
+          "background": "#1BD760",
+          "type": "spotify",
+          "style": "powerline"
         }
       ]
     }
   ],
   "tooltips": [
     {
-      "type": "git",
-      "tips": [
-        "git",
-        "g"
-      ],
-      "style": "diamond",
-      "foreground": "#193549",
-      "background": "#fffb38",
-      "leading_diamond": "",
-      "trailing_diamond": "",
-      "template": "{{ .HEAD }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}",
       "properties": {
         "fetch_status": true,
         "fetch_upstream_icon": true
-      }
+      },
+      "leading_diamond": "\ue0b6",
+      "trailing_diamond": "\ue0b4",
+      "template": "{{ .HEAD }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}",
+      "foreground": "#193549",
+      "background": "#fffb38",
+      "type": "git",
+      "style": "diamond",
+      "tips": [
+        "git",
+        "g"
+      ]
     },
     {
-      "type": "az",
-      "tips": [
-        "az"
-      ],
-      "style": "powerline",
-      "powerline_symbol": "\ue0b0",
-      "foreground": "#ffffff",
-      "background": "#000033",
       "properties": {
         "display_name": true
-      }
+      },
+      "foreground": "#ffffff",
+      "powerline_symbol": "\ue0b0",
+      "background": "#000033",
+      "type": "az",
+      "style": "powerline",
+      "tips": [
+        "az"
+      ]
     }
-  ]
+  ],
+  "version": 3,
+  "final_space": true
 }

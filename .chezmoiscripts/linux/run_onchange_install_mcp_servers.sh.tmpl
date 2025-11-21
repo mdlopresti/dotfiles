@@ -1,0 +1,31 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+# Install MCP Servers for Claude Code
+# Model Context Protocol servers extend Claude's capabilities
+
+echo "Installing MCP server dependencies..."
+
+# Ensure Docker is available for all MCP servers
+if ! command -v docker &> /dev/null; then
+    echo "Error: Docker is required for MCP servers but not found."
+    exit 1
+fi
+
+# Pull MCP server Docker images
+echo "Pulling MCP server Docker images..."
+docker pull mcp/fetch 2>/dev/null || echo "Warning: mcp/fetch image not available"
+docker pull mcp/filesystem 2>/dev/null || echo "Warning: mcp/filesystem image not available"
+docker pull mcp/git 2>/dev/null || echo "Warning: mcp/git image not available"
+
+echo ""
+echo "MCP server setup complete!"
+echo ""
+echo "Available MCP servers configured in ~/.vscode/mcp.json:"
+echo "  - fetch: Web fetching capabilities"
+echo "  - filesystem: File system access with home directory mounted"
+echo "  - git: Git repository operations with home directory mounted"
+echo ""
+echo "To use MCP servers, restart Claude Code after running 'chezmoi apply'"
+
+{{ end }}

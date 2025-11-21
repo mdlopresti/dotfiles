@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{{ if eq .chezmoi.osRelease.name "Bluefin" }}
+brew install --cask claude-code
+{{ end }}

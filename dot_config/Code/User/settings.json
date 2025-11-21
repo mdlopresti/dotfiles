@@ -1,7 +1,31 @@
 {
     "window.titleBarStyle": "custom",
-    "editor.fontFamily": "'SauceCodePro Nerd Font', 'Droid Sans Mono', 'monospace', monospace",
-    "git.autofetch": true,
+    "editor.fontFamily": "'Cascadia Code', 'Droid Sans Mono', 'monospace', monospace",
     "git.enableSmartCommit": true,
-    "git.confirmSync": false
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "yaml.schemas": {
+        "file:///var/home/mike/.vscode/extensions/continue.continue-1.2.10-linux-x64/config-yaml-schema.json": [
+            ".continue/**/*.yaml"
+        ]
+    },
+    "git.replaceTagsWhenPull": true,
+    "github.copilot.nextEditSuggestions.enabled": false,
+    "chat.tools.terminal.autoApprove": {
+        "kubectl describe": true,
+        "kubectl logs": true,
+        "kubectl get": true,
+        "sed": true,
+        "pid1=$!": true,
+        "kill": true,
+        "true": true
+    },
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false,
+        "yaml": false
+    }
 }

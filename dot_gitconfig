@@ -9,9 +9,9 @@
     process = git-lfs filter-process
     required = true
 [core]
-    autocrlf = false
+    autocrlf = true
 [credential]
-    helper = wincred
+	helper = store
 [init]
     defaultBranch = main
 [credential "https://dev.azure.com"]

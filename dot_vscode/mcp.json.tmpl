@@ -1,0 +1,39 @@
+{{- /* MCP Server Configuration for Claude Code */ -}}
+{
+  "servers": {
+    "fetch": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/fetch"
+      ]
+    },
+    "filesystem": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "{{ .chezmoi.homeDir }}:{{ .chezmoi.homeDir }}",
+        "mcp/filesystem",
+        "{{ .chezmoi.homeDir }}"
+      ]
+    },
+    "git": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "{{ .chezmoi.homeDir }}:{{ .chezmoi.homeDir }}",
+        "-w",
+        "{{ .chezmoi.homeDir }}",
+        "mcp/git"
+      ]
+    }
+  }
+}

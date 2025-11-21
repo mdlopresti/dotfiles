@@ -2,33 +2,33 @@ Host homeassistant
   HostName homeassistant.vilo.network
   User root
   IdentityFile ~/.ssh/id_rsa_desktop
-Host ansible
-  HostName ansible.vilo.network
-  User root
-  IdentityFile ~/.ssh/id_rsa_desktop
 Host pve
   HostName pve.vilo.network
   User root
-  IdentityFile ~/.ssh/id_rsa_desktop
-Host docker-host
-  HostName docker-host.vilo.network
-  User mike
-  IdentityFile ~/.ssh/id_rsa_desktop
-Host nextcloud
-  HostName 192.168.3.14
-  User semaphore
   IdentityFile ~/.ssh/id_rsa_desktop
 Host audiobookshelf
   HostName audiobookshelf-host.vilo.network
   User semaphore
   IdentityFile ~/.ssh/id_rsa_desktop
-Host wiki
-  HostName bookstack.vilo.network
-  User semaphore
+Host kube1
+  HostName kube1.vilo.network
+  User ubuntu
   IdentityFile ~/.ssh/id_rsa_desktop
-Host k8s
-  HostName k8s-controller.vilo.network
-  User semaphore
+Host kube2
+  HostName kube2.vilo.network
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host kube3
+  HostName kube3.vilo.network
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host kube4
+  HostName kube4.vilo.network
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa_desktop
+Host plex
+  HostName plex.vilo.network
+  User ubuntu
   IdentityFile ~/.ssh/id_rsa_desktop
 Host gitlab.com
   PreferredAuthentications publickey
@@ -42,4 +42,12 @@ Host files
   IdentityFile ~/.ssh/id_rsa_desktop
 Host gitea gitea.vilo.network
   PreferredAuthentications publickey
-  IdentityFile ~/.ssh/id_rsa
+  IdentityFile ~/.ssh/id_rsa_desktop
+host auth authentik
+  HostName authentik.vilo.network
+  user mike
+  IdentityFile ~/.ssh/id_rsa_desktop
+host host
+  HostName host.vilo.network
+  user root
+  IdentityFile ~/.ssh/id_rsa_desktop
