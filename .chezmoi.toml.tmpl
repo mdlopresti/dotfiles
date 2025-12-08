@@ -4,7 +4,7 @@ sourceDir = {{ .chezmoi.sourceDir | quote }}
 [data]
     name = "Your name"
     codespaces = {{ $codespaces }}
-{{ if eq .chezmoi.hostname "MikesDesktop" -}}
+{{ if or (eq .chezmoi.hostname "MikesDesktop") (eq .chezmoi.hostname "MikesLaptop") -}}
     email = "mike@lopresti.org"
 {{- else }}
     email = "michael.lopresti@yum.com"
