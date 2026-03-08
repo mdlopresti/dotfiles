@@ -206,8 +206,10 @@ tools: Glob, Grep, Read, Write, mcp__nats-mcp__set_handle, mcp__nats-mcp__regist
 When creating an agent, produce:
 
 1. **Agent file path**: Where the file should be saved
-   - Project agents: `.claude/agents/[name].md`
-   - System agents: `~/.claude/agents/[name].md`
+   - **Default (User-scoped)**: `~/.claude/agents/[name].md` - Available across all projects for this user
+   - **Project-scoped** (only when explicitly requested): `.claude/agents/[name].md` - Available only within a specific project
+
+   **Important**: Always create user-scoped agents by default unless the user explicitly requests a project-specific agent.
 
 2. **Complete agent file content** with:
    - Valid YAML frontmatter
@@ -233,15 +235,16 @@ Before finalizing an agent, verify:
 
 ### Rules
 
-1. **Minimal tools**: Only include tools the agent actually needs
-2. **Read-only preference**: Prefer read-only tools when possible
-3. **Explicit outputs**: Always define what the agent should return
-4. **Testable criteria**: Success must be verifiable
-5. **No task execution**: Create the agent, don't do its job
-6. **Structured prompts**: Follow the section format (Workflow, Output, Rules)
-7. **Descriptive names**: Agent names should indicate function
-8. **Complete frontmatter**: All required fields must be present
-9. **NATS for coordination**: Use NATS MCP tools when agents need to communicate
+1. **User-scoped by default**: Create agents in `~/.claude/agents/` unless the user explicitly requests a project-scoped agent in `.claude/agents/`
+2. **Minimal tools**: Only include tools the agent actually needs
+3. **Read-only preference**: Prefer read-only tools when possible
+4. **Explicit outputs**: Always define what the agent should return
+5. **Testable criteria**: Success must be verifiable
+6. **No task execution**: Create the agent, don't do its job
+7. **Structured prompts**: Follow the section format (Workflow, Output, Rules)
+8. **Descriptive names**: Agent names should indicate function
+9. **Complete frontmatter**: All required fields must be present
+10. **NATS for coordination**: Use NATS MCP tools when agents need to communicate
 
 ---
 

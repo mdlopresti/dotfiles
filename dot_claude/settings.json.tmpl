@@ -1,9 +1,31 @@
-{{- /* Claude Code Settings - Linux only */ -}}
+{{- /* Claude Code Settings */ -}}
 {
-  "alwaysThinkingEnabled": true,
+  "includeCoAuthoredBy": false,
   "allowedMcpServers": [
     {
-      "serverName": "nats-mcp"
+      "serverName": "mealie"
+    },
+    {
+      "serverName": "homeassistant"
+    },
+    {
+      "serverName": "kroger"
+    },
+    {
+      "serverName": "proton-email"
+    },
+    {
+      "serverName": "a2a"
     }
-  ]
+  ],
+  "extraKnownMarketplaces": {
+    "claude-toolkit": {
+      "source": {
+        "source": "github",
+        "repo": "dwmkerr/claude-toolkit"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true
 }

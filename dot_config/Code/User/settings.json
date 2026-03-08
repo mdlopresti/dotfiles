@@ -27,5 +27,6 @@
         "markdown": false,
         "scminput": false,
         "yaml": false
-    }
+    },
+    "claudeCode.preferredLocation": "panel"
 }

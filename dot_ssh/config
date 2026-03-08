@@ -1,5 +1,5 @@
 Host homeassistant
-  HostName homeassistant.vilo.network
+  HostName 192.168.7.194
   User root
   IdentityFile ~/.ssh/id_rsa_desktop
 Host pve
