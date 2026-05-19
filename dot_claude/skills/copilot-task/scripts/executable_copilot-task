@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+# copilot-task — invoke the GitHub Copilot CLI as a Coordinator-style subagent.
+#
+# Wraps `copilot -p` so a calling agent (Claude session, orchestrator, etc.)
+# can dispatch a planner/critic/implementer task to Copilot the same way it
+# would spawn a Claude subagent. The wrapper:
+#
+#   * Prepends a role definition (from roles/<role>.md) to the task prompt.
+#   * Sets a working directory (-C) and per-role permission defaults.
+#   * Runs Copilot non-interactively and writes its final response to stdout.
+#
+# Why JSON-mode internally:
+#   Copilot CLI's human-readable text renderer relies on TTY-only ANSI cursor
+#   sequences. When stdout is a pipe or file (i.e. invoked from any non-TTY
+#   subprocess — another Claude session's Bash tool, a background dispatcher,
+#   a CI runner), the rendered final response is dropped or garbled. The JSON
+#   event stream (`--output-format json`) is unaffected. So this wrapper
+#   always asks Copilot for JSON internally and reconstructs the response
+#   text from `assistant.message` events, giving callers the same final-text
+#   contract regardless of how they invoke the wrapper.
+#
+# See SKILL.md alongside this script for the contract callers follow.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
+ROLES_DIR="${SKILL_DIR}/roles"
+
+usage() {
+  cat <<'EOF'
+Usage: copilot-task --role <name> --repo <path> (--prompt <text> | --prompt-file <path>) [options] [-- <passthrough...>]
+
+Invoke the GitHub Copilot CLI as a Coordinator-style subagent.
+
+Required:
+  --role <name>            One of: planner, critic, implementer (or any file in roles/)
+  --repo <path>            Absolute path to the target repository (becomes Copilot's cwd)
+  --prompt <text>          The task prompt
+  --prompt-file <path>     Read the task prompt from a file ("-" for stdin)
+
+Options:
+  --model <name>           Override Copilot's model (default: gpt-5-mini)
+  --add-dir <path>         Grant Copilot additional directory access (repeatable)
+  --output text|json       Output format (default: text — the final assistant
+                           response, reconstructed from Copilot's JSON event
+                           stream. json mode streams the raw JSONL events
+                           verbatim, one event per line.)
+  --name <session-name>    Name the Copilot session for later --resume
+  --resume <session>       Resume a prior session by id, name, or id-prefix
+  --dry-run                Print the resolved copilot command and exit
+  --                       Everything after -- is passed through to copilot verbatim
+  -h, --help               Show this help
+
+Defaults applied for every invocation:
+  -p <prompt>              non-interactive
+  -C <repo>                set cwd
+  --allow-all-tools        no interactive tool prompts
+  --no-ask-user            agent does not stop to ask the user questions
+  --output-format json     ask Copilot for the JSON event stream (the wrapper
+                           reconstructs response text from it for text mode,
+                           or forwards it verbatim for --output json)
+
+Per-role defaults (applied unless overridden via passthrough):
+  planner:      no extra dirs; the repo is the work surface
+  critic:       --deny-tool='write'  (no edits; mirrors the Critic role contract)
+  implementer:  no extra dirs; the repo is the work surface
+
+Dependencies:
+  jq must be on PATH. The wrapper uses it to extract assistant message
+  content from Copilot's JSON event stream.
+
+If a role needs to read files outside the repo (workflow contracts,
+methodology docs, sibling repos), pass them as --add-dir at invocation time.
+The wrapper does not auto-mount anything beyond cwd.
+EOF
+}
+
+ROLE=""
+REPO=""
+PROMPT=""
+PROMPT_FILE=""
+# Default to GPT-5 mini for every invocation. Override with --model.
+MODEL="gpt-5-mini"
+EXTRA_DIRS=()
+OUTPUT_FORMAT="text"
+SESSION_NAME=""
+RESUME=""
+DRY_RUN=0
+PASSTHROUGH=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --role)        ROLE="${2:?--role needs a value}"; shift 2 ;;
+    --repo)        REPO="${2:?--repo needs a value}"; shift 2 ;;
+    --prompt)      PROMPT="${2:?--prompt needs a value}"; shift 2 ;;
+    --prompt-file) PROMPT_FILE="${2:?--prompt-file needs a value}"; shift 2 ;;
+    --model)       MODEL="${2:?--model needs a value}"; shift 2 ;;
+    --add-dir)     EXTRA_DIRS+=("${2:?--add-dir needs a value}"); shift 2 ;;
+    --output)      OUTPUT_FORMAT="${2:?--output needs a value}"; shift 2 ;;
+    --name)        SESSION_NAME="${2:?--name needs a value}"; shift 2 ;;
+    --resume)      RESUME="${2:?--resume needs a value}"; shift 2 ;;
+    --dry-run)     DRY_RUN=1; shift ;;
+    -h|--help)     usage; exit 0 ;;
+    --)            shift; PASSTHROUGH=("$@"); break ;;
+    *)             echo "copilot-task: unknown arg '$1'" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+[[ -z "$ROLE" ]] && { echo "copilot-task: --role is required" >&2; exit 2; }
+[[ -z "$REPO" ]] && { echo "copilot-task: --repo is required" >&2; exit 2; }
+[[ -z "$PROMPT" && -z "$PROMPT_FILE" ]] && {
+  echo "copilot-task: --prompt or --prompt-file is required" >&2; exit 2;
+}
+[[ -n "$PROMPT" && -n "$PROMPT_FILE" ]] && {
+  echo "copilot-task: pass either --prompt or --prompt-file, not both" >&2; exit 2;
+}
+[[ ! -d "$REPO" ]] && {
+  echo "copilot-task: repo path does not exist or is not a directory: $REPO" >&2; exit 2;
+}
+
+case "$OUTPUT_FORMAT" in
+  text|json) ;;
+  *) echo "copilot-task: --output must be 'text' or 'json' (got '$OUTPUT_FORMAT')" >&2; exit 2 ;;
+esac
+
+# Require jq before invoking Copilot — text mode depends on it for content
+# extraction, and even json mode is documented as JSONL (jq is the natural
+# downstream tool). Failing here gives a clearer error than a downstream
+# pipeline failure.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "copilot-task: 'jq' is required on PATH (the wrapper extracts assistant content from Copilot's JSON event stream; see SKILL.md)." >&2
+  exit 2
+fi
+
+ROLE_FILE="${ROLES_DIR}/${ROLE}.md"
+[[ ! -f "$ROLE_FILE" ]] && {
+  echo "copilot-task: unknown role '$ROLE' (no file at $ROLE_FILE)" >&2
+  echo "available roles:" >&2
+  ls -1 "$ROLES_DIR" 2>/dev/null | sed -e 's/\.md$//' -e 's/^/  /' >&2
+  exit 2;
+}
+
+if [[ -n "$PROMPT_FILE" ]]; then
+  if [[ "$PROMPT_FILE" == "-" ]]; then
+    PROMPT="$(cat)"
+  else
+    [[ ! -f "$PROMPT_FILE" ]] && {
+      echo "copilot-task: prompt file not found: $PROMPT_FILE" >&2; exit 2;
+    }
+    PROMPT="$(cat "$PROMPT_FILE")"
+  fi
+fi
+
+ROLE_PROMPT="$(cat "$ROLE_FILE")"
+FULL_PROMPT="${ROLE_PROMPT}
+
+---
+
+# Task
+
+${PROMPT}"
+
+# Always request JSON internally — text mode is unreliable from non-TTY
+# subprocesses (see header comment). The wrapper translates JSONL → response
+# text for text-mode callers; json-mode callers get the raw stream.
+CMD=(copilot -p "$FULL_PROMPT" -C "$REPO" --allow-all-tools --no-ask-user --output-format json)
+
+case "$ROLE" in
+  critic)
+    # Critic is read-only by contract; deny the write tool so it can't drift.
+    CMD+=(--deny-tool='write')
+    ;;
+esac
+
+for d in "${EXTRA_DIRS[@]:-}"; do
+  [[ -n "$d" ]] && CMD+=(--add-dir "$d")
+done
+
+[[ -n "$MODEL" ]]        && CMD+=(--model "$MODEL")
+[[ -n "$SESSION_NAME" ]] && CMD+=(--name "$SESSION_NAME")
+[[ -n "$RESUME" ]]       && CMD+=(--resume "$RESUME")
+
+if (( ${#PASSTHROUGH[@]} > 0 )); then
+  CMD+=("${PASSTHROUGH[@]}")
+fi
+
+if (( DRY_RUN )); then
+  printf '%q ' "${CMD[@]}"
+  printf '\n'
+  exit 0
+fi
+
+# --output json: caller asked for the raw event stream. Hand off via exec so
+# the JSONL streams in real time and Copilot's exit code surfaces directly.
+if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+  exec "${CMD[@]}"
+fi
+
+# --output text (default): capture the JSONL stream, extract assistant
+# message content, surface that as stdout.
+JSONL_TMP="$(mktemp -t copilot-task.XXXXXX.jsonl)"
+trap 'rm -f "$JSONL_TMP"' EXIT
+
+COPILOT_EC=0
+"${CMD[@]}" > "$JSONL_TMP" || COPILOT_EC=$?
+
+# Multiple assistant.message events can appear in a single run (one per
+# assistant turn when tool calls intervene). Join them with blank lines so
+# the result reads as a coherent narrative rather than a smashed-together
+# blob. -r emits raw strings; the final newline below makes stdout terminate
+# cleanly the way callers expect.
+ASSISTANT_CONTENT="$(jq -rs '
+  [ .[] | select(.type == "assistant.message") | .data.content ]
+  | join("\n\n")
+' "$JSONL_TMP" 2>/dev/null || true)"
+
+if [[ -n "$ASSISTANT_CONTENT" ]]; then
+  printf '%s\n' "$ASSISTANT_CONTENT"
+fi
+
+if (( COPILOT_EC != 0 )); then
+  echo "copilot-task: copilot exited with code $COPILOT_EC" >&2
+  exit "$COPILOT_EC"
+fi
+
+if [[ -z "$ASSISTANT_CONTENT" ]]; then
+  echo "copilot-task: copilot emitted no assistant.message events; no final response was captured. Re-run with --output json to inspect the raw event stream." >&2
+  exit 3
+fi
+
+exit 0

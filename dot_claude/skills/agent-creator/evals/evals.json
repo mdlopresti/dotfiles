@@ -1,0 +1,26 @@
+{
+  "skill_name": "agent-creator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "create-pre-push-diff-reviewer",
+      "prompt": "I want a subagent that reviews my git diff before I push and flags anything embarrassing — leftover console.logs or debug prints, hardcoded API keys, commented-out code I forgot to clean up, files that shouldn't be committed (like .env or node_modules). It should run when I say 'check my changes' or 'review my diff before I push'. Make it user-scoped so I can use it across all my projects.",
+      "expected_output": "A new agent file at ~/.claude/agents/<kebab-name>.md with valid frontmatter (name, description that mentions both what and when, minimal tools list — Read+Glob+Grep+Bash to run git diff), a system prompt body with Role/Workflow/Output/Constraints sections, and structured around an autonomous-agent pattern. Should also tell the user that Claude Code needs a session restart to pick up the new agent.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "edit-add-bash-to-requirements-reviewer",
+      "prompt": "Add the Bash tool to the requirements-reviewer agent. It needs to run validation scripts on spec files sometimes. Don't change anything else about it.",
+      "expected_output": "A surgical Edit (not Write) to ~/.claude/agents/requirements-reviewer.md that modifies only the tools: line in frontmatter to add Bash, leaving description, model, color, and the entire system prompt body untouched. Should mention session restart for the change to take effect. Note: workspace directory still named `eval-2-edit-add-webfetch-to-requirements-reviewer/` from a fixture-naming carryover — will be renamed in iteration 2.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "pattern-selection-pr-review-flow",
+      "prompt": "I want to handle a full PR review flow with Claude Code: read the diff, check for correctness issues, write review comments on the PR, and even propose fix commits when the issue is clear-cut. Should I make this one Claude Code agent that does the whole thing, or split it into multiple agents? What's the right shape?",
+      "expected_output": "A recommendation that references specific Anthropic patterns from references/anthropic-patterns.md (likely orchestrator-workers or evaluator-optimizer, possibly a hybrid). Explains when to keep one agent vs split, names tradeoffs (context budget, fault isolation, debuggability), and lands on a concrete suggestion for this case. Should NOT just list options — should pick a direction and justify it.",
+      "files": []
+    }
+  ]
+}
