@@ -64,7 +64,7 @@ For the full state table with transition ownership, see `references/state-machin
 
 | Stack | Source forge | Implementer backend |
 |---|---|---|
-| **Personal** | Gitea (`gitea.vilo.network/ViLoHouse/*`) | Claude |
+| **Personal** | Forgejo (`git.vilo.network/ViLoHouse/*`) | Claude |
 | **Yum** (`yummsapim` is current primary) | GitLab | GitHub Copilot |
 
 Both stacks plan with Claude (Coordinator + Planner). Only implementers vary.
